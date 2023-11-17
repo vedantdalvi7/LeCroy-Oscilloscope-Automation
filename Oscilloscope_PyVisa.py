@@ -391,7 +391,7 @@ class Oscilloscope:
         # See http://cdn.teledynelecroy.com/files/manuals/tds031000-2000_programming_manual.pdf#page=101
         parameters = [pkpk, ampl, max, min, sdev, mean, base, top]
 
-        print("Saving measured parameters...")
+        # print("Saving measured parameters...")
         #dir = self.query("vbs? 'app.SaveRecall.Waveform.WaveformDir '")
         # create a new XLSX workbook
         wb = xlsxwriter.Workbook(fr"{path}\{id}.xlsx")
@@ -401,12 +401,12 @@ class Oscilloscope:
             worksheet.write(row_num, 0, data)
 
         wb.close()
-        print("Parameters saved successfully!")
+        # print("Parameters saved successfully!\n")
 
         return parameters
 
     def save_waveform_on_OSC(self, fileformat:str, channel:int, filename:str):
-        print("Saving waveform data on OSC....")
+        # print("Saving waveform data on OSC....")
         self.write(f"vbs 'app.SaveRecall.Waveform.WaveFormat = \"{fileformat}\" '")
         self.write(f"vbs 'app.SaveRecall.Waveform.SaveSource = \"C{channel}\" '")
         self.query("vbs? 'app.SaveRecall.Waveform.SaveFile'")
@@ -415,24 +415,24 @@ class Oscilloscope:
         self.query(f"vbs? 'app.SaveRecall.Waveform.TraceTitle = \"{filename}\" '")
         #self.query("vbs? 'app.SaveRecall.Utilities.Directory")                      
         self.query("vbs? 'app.SaveRecall.Utilities.Directory'")
-        print("Waveform data saved successfully on Oscilloscope!")
+        # print("Waveform data saved successfully on Oscilloscope!")
     
     def get_waveform_from_osc(self, id:str):        # %%% CHECK 
         osc_path = self.read("vbs?' app.SaveRecall.Utilities.DestDirectory'")
-        print(osc_path)
+        # print(osc_path)
         #self.write("vbs' app.SaveRecall.Utilities.DestDirectory'")
        #file_path = r"C:\Users\DAV1SI\Desktop\test"
        #os.path.join(osc_path, id)
-        print("FIle saved successfuly on PC")
+        # print("FIle saved successfuly on PC\n")
             
         
     def save_waveform_on_PC(self, path:str, waveform:pd.DataFrame, id:str): #CHECK
         if not os.path.exists(path):
             os.makedirs(path)
         id = id + ".csv"
-        print("Saving waveform data in excel on controlling PC....")
+        # print("Saving waveform data in excel on controlling PC....")
         waveform.to_csv(os.path.join(path,id))
-        print("Waveform data saved successfully on controlling PC!")
+        # print("Waveform data saved successfully on controlling PC!\n")
         
         
 # if __name__ == "__main__":
