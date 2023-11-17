@@ -93,7 +93,7 @@ def SET_TRIGGER(OSC, channel:float, trig_source:str, trigger_type:str, trigger_m
         
     
 
-        OSC.set_trig_mode("AUTO")
+        #OSC.set_trig_mode("AUTO")
 
 # def GET_WAVEFORM_FROM_PC(OSC, ID:str):    #WORK IN PROGRESS
 #     pc_path = r"C:\Users\DAV1SI\Desktop\test"
