@@ -376,6 +376,18 @@ class Oscilloscope:
         self.write(f"vbs? 'app.Acquisition.C{channel}.Multiplier = {float(value)}'") 
          # See http://cdn.teledynelecroy.com/files/manuals/automation_command_ref_manual_ws.pdf#page=348
 
+    def show_measure(self, bool:bool):
+        """Show the measure table"""
+        self.write(f"vbs? 'app.Measure.ShowMeasure = {bool}'") 
+    
+    def statistics_measure(self, bool:bool):
+        """Show the statistics of the measure table"""
+        self.write(f"vbs? 'app.Measure.StatsOn = {bool}'") 
+
+    def set_measure_source(self, source:str):
+        """Set the source for the measure table"""
+        self.write(f"vbs? 'app.Measure.P1.Source1 = {source}'") 
+
     def save_parameters_trace(self, path:str, channel: int, fileformat:str, id:str):
         _validate_waveform_format(fileformat)
         """measure the parameters of the trace for the specified channel."""
@@ -391,7 +403,7 @@ class Oscilloscope:
         # See http://cdn.teledynelecroy.com/files/manuals/tds031000-2000_programming_manual.pdf#page=101
         parameters = [pkpk, ampl, max, min, sdev, mean, base, top]
 
-        print("Saving measured parameters...")
+        # print("Saving measured parameters...")
         #dir = self.query("vbs? 'app.SaveRecall.Waveform.WaveformDir '")
         # create a new XLSX workbook
         wb = xlsxwriter.Workbook(fr"{path}\{id}.xlsx")
@@ -401,12 +413,12 @@ class Oscilloscope:
             worksheet.write(row_num, 0, data)
 
         wb.close()
-        print("Parameters saved successfully!")
+        # print("Parameters saved successfully!\n")
 
         return parameters
 
     def save_waveform_on_OSC(self, fileformat:str, channel:int, filename:str):
-        print("Saving waveform data on OSC....")
+        # print("Saving waveform data on OSC....")
         self.write(f"vbs 'app.SaveRecall.Waveform.WaveFormat = \"{fileformat}\" '")
         self.write(f"vbs 'app.SaveRecall.Waveform.SaveSource = \"C{channel}\" '")
         self.query("vbs? 'app.SaveRecall.Waveform.SaveFile'")
@@ -415,27 +427,26 @@ class Oscilloscope:
         self.query(f"vbs? 'app.SaveRecall.Waveform.TraceTitle = \"{filename}\" '")
         #self.query("vbs? 'app.SaveRecall.Utilities.Directory")                      
         self.query("vbs? 'app.SaveRecall.Utilities.Directory'")
-        print("Waveform data saved successfully on Oscilloscope!")
+        # print("Waveform data saved successfully on Oscilloscope!")
     
     def get_waveform_from_osc(self, id:str):        # %%% CHECK 
         osc_path = self.read("vbs?' app.SaveRecall.Utilities.DestDirectory'")
-        print(osc_path)
+        # print(osc_path)
         #self.write("vbs' app.SaveRecall.Utilities.DestDirectory'")
        #file_path = r"C:\Users\DAV1SI\Desktop\test"
        #os.path.join(osc_path, id)
-        print("FIle saved successfuly on PC")
+        # print("FIle saved successfuly on PC\n")
             
         
     def save_waveform_on_PC(self, path:str, waveform:pd.DataFrame, id:str): #CHECK
         if not os.path.exists(path):
             os.makedirs(path)
         id = id + ".csv"
-        print("Saving waveform data in excel on controlling PC....")
-        waveform.to_csv(os.path.join(path,id))
-        print("Waveform data saved successfully on controlling PC!")
-        
+        # print("Saving waveform data in excel on controlling PC....")
+        # waveform.sort_values("Time (s)")
+        waveform.to_csv(os.path.join(path,id), index=False, sep = ";", columns=["Time (s)", "Amplitude (V)"])
+        # print("Waveform data saved successfully on controlling PC!\n")
         
 # if __name__ == "__main__":
 #     osc =osc = Oscilloscope("TCPIP0::192.168.40.26::inst0::INSTR")
 #     osc.query("VBS?'app.SaveRecall.Waveform.RecallFilename'")
-        
