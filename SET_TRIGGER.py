@@ -10,6 +10,7 @@ Created on Wed Nov  8 14:15:26 2023
 
 import pandas as pd
 from configparser import ConfigParser
+import time
 
 #Get the configparser object
 config_object = ConfigParser()
@@ -69,9 +70,13 @@ def read_settings_config(channel:float):
 
 def SET_TRIGGER(OSC, channel:float, trig_source:str, trigger_type:str, trigger_mode:str, trigger_slope:str, trigger_coupling:str, trigger_level:float,t_div:str, v_div:float, PC_path:str): # OSC_path
         
-        filename = str(OSC.trig_time().replace("," , "_"))
+        #folder_name = str(OSC.trig_time().replace("," , "_").split('3'))
+        
+        filename = str(OSC.query("DATE?").replace("," , "_"))
+        
         OSC.set_tdiv(t_div)
         OSC.set_vdiv(channel, v_div)
+        
         OSC.set_trig_source("C"+ str(channel))
         OSC.set_trig_type(trigger_type)
         OSC.set_trig_coupling(trig_source,trigger_coupling)
@@ -83,17 +88,15 @@ def SET_TRIGGER(OSC, channel:float, trig_source:str, trigger_type:str, trigger_m
         
         print(f"TRIGGER ID: C{channel} = {filename}")
         waveform = OSC.get_waveform(channel)
-        print(waveform)
-            
+        print(waveform)  
         waveform = pd.DataFrame(waveform)
 
         OSC.save_waveform_on_OSC("Excel", channel,  "C" + str(channel) + "_" + filename)
         OSC.save_waveform_on_PC(PC_path, waveform,  "C" + str(channel) + "_" + filename)
         OSC.save_parameters_trace(PC_path, channel, 'Excel', "C" + str(channel) + "_" + filename + str("_parameters_"))
-        
-    
+           
 
-        #OSC.set_trig_mode("AUTO")
+        OSC.set_trig_mode("AUTO")
 
 # def GET_WAVEFORM_FROM_PC(OSC, ID:str):    #WORK IN PROGRESS
 #     pc_path = r"C:\Users\DAV1SI\Desktop\test"

@@ -6,8 +6,8 @@ import xlsxwriter
 # from xlsxwriter import Workbook
 import time
 import numpy as np
-import datetime
 
+from datetime import datetime
 import os
 # import csv
 # from csv import writer
@@ -429,9 +429,13 @@ class Oscilloscope:
     def save_waveform_on_PC(self, path:str, waveform:pd.DataFrame, id:str): #CHECK
         if not os.path.exists(path):
             os.makedirs(path)
+        
+        # os.mkdir(f"{path}" + id)
+
         id = id + ".csv"
         # print("Saving waveform data in excel on controlling PC....")
-        waveform.to_csv(os.path.join(path,id))
+        # waveform['Time (s),Amplitude (V)'] =
+        waveform.to_csv(os.path.join(path,id), index=False)
         # print("Waveform data saved successfully on controlling PC!\n")
         
         
