@@ -376,6 +376,18 @@ class Oscilloscope:
         self.write(f"vbs? 'app.Acquisition.C{channel}.Multiplier = {float(value)}'") 
          # See http://cdn.teledynelecroy.com/files/manuals/automation_command_ref_manual_ws.pdf#page=348
 
+    def show_measure(self, bool:bool):
+        """Show the measure table"""
+        self.write(f"vbs? 'app.Measure.ShowMeasure = {bool}'") 
+    
+    def statistics_measure(self, bool:bool):
+        """Show the statistics of the measure table"""
+        self.write(f"vbs? 'app.Measure.StatsOn = {bool}'") 
+
+    def set_measure_source(self, source:str):
+        """Set the source for the measure table"""
+        self.write(f"vbs? 'app.Measure.P1.Source1 = {source}'") 
+
     def save_parameters_trace(self, path:str, channel: int, fileformat:str, id:str):
         _validate_waveform_format(fileformat)
         """measure the parameters of the trace for the specified channel."""
@@ -437,9 +449,22 @@ class Oscilloscope:
         # waveform['Time (s),Amplitude (V)'] =
         waveform.to_csv(os.path.join(path,id), index=False)
         # print("Waveform data saved successfully on controlling PC!\n")
+    
+    def save_hard_copy(self, hard_copy_area:str, img_format:str): #, preferred_filename:str):    
+        VALID_HARD_COPY_AREA_OPTIONS = ["GridAreaOnly", "DSOWindow", "FullScreen"]
+        if not isinstance(hard_copy_area, str) or hard_copy_area.lower() not in {hc.lower() for hc in VALID_HARD_COPY_AREA_OPTIONS}:
+            raise ValueError(f'The trigger coupling must be one of {VALID_HARD_COPY_AREA_OPTIONS}, received {repr(hard_copy_area)}...')
+        VALID_HARD_COPY_IMG_FORMATS = ["JPEG", "PNG", "TIFF", "BMP"]
+        if not isinstance(img_format, str) or img_format.lower() not in {img_f.lower() for img_f in VALID_HARD_COPY_IMG_FORMATS}:
+            raise ValueError(f'The trigger coupling must be one of {VALID_HARD_COPY_IMG_FORMATS}, received {repr(img_format)}...')  
+
+        self.write(f"vbs? 'app.HardCopy.ImageFileFormat = {img_format}' ")
+        # self.write(f"vbs? 'app.HardCopy.PreferredFilename = {preferred_filename}' ")
+        # self.write("vbs? 'app.HardCopy.EnableCounterSuffix = True' ")
+        self.write(f"vbs? 'app.HardCopy.HardcopyArea = {hard_copy_area}' ")
         
         
-# if __name__ == "__main__":
-#     osc =osc = Oscilloscope("TCPIP0::192.168.40.26::inst0::INSTR")
-#     osc.query("VBS?'app.SaveRecall.Waveform.RecallFilename'")
-        
+if __name__ == "__main__":
+    osc =osc = Oscilloscope("TCPIP0::192.168.40.26::inst0::INSTR")
+    osc.save_hard_copy("FullScreen", "JPEG")
+    # osc.query("VBS?'app.SaveRecall.Waveform.RecallFilename'")
