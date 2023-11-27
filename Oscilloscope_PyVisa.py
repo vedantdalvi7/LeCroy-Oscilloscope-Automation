@@ -464,7 +464,7 @@ class Oscilloscope:
         self.write(f"vbs? 'app.HardCopy.HardcopyArea = {hard_copy_area}' ")
         
         
-if __name__ == "__main__":
-    osc =osc = Oscilloscope("TCPIP0::192.168.40.26::inst0::INSTR")
-    osc.save_hard_copy("FullScreen", "JPEG")
+#if __name__ == "__main__":
+   # osc =osc = Oscilloscope("TCPIP0::192.168.40.26::inst0::INSTR")
+   # osc.save_hard_copy("FullScreen", "JPEG")
     # osc.query("VBS?'app.SaveRecall.Waveform.RecallFilename'")
