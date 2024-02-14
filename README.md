@@ -1,4 +1,4 @@
-"LeCroy-Oscilloscope-Automation" 
+**LeCroy-Oscilloscope-Automation**
 
 The purpose of this script is to automate and customize the setup and trigger functionalities of an Oscilloscope.
 
@@ -11,9 +11,9 @@ TRIGGER_SEQ.py has all the configurable Channel, Timebase and Trigger parameters
 plot_measured_Waveform.py helps in validating the saved waveforms.
 
 ------------------------------------------------------------------------------------------------------------------------------------------
-OSCILLOSCOPE SETUP INSTRUCTIONS:
+**OSCILLOSCOPE SETUP INSTRUCTIONS:**
 
-i. Make sure FIrewall is Disabled on BOTH the OSC and PC
+i. Make sure Firewall is Disabled on BOTH the OSC and PC
 
 ii. REMEMBER to set the correct IP of OSC and select the LXI(VXI1) protocol from "Utilities-> Utilities Setup-> Remote-> Control From" in DSO application on OSC. Make sure OSC and PC have the same subnet
 
@@ -29,9 +29,9 @@ e. Check if ActiveDSO or VICP Passport is installed on controlling PC. (if not, 
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 
-You need the "TRIGGER_SEQ.py" script to Trigger the OSC in SINGLE or NORMAL mode
+**You need the "TRIGGER_SEQ.py" script to Trigger the OSC in SINGLE or NORMAL mode**
 
-Note: To run the script, you only need to change the Config parameters at the top of the script as per your requirement.
+**Note: To run the script, you only need to change the Config parameters at the top of the script as per your requirement.**
 
 1. Set the individual channel Vertical & Horizontal settings using the "SET_CHANNEL_PARAMETERS" & "timebase_settings" attributes of Oscilloscope Library and save the setup file as a "File" or in oscilloscope "Memory" with your specific name/date in a specific folder.
 

@@ -4,9 +4,9 @@ Created on Wed Nov  8 14:15:26 2023
 
 @author: DAV1SI
 
-This script sets the channel & trigger parameters of the oscilloscope and triggers and receives the waveform
+This script DEFINES SINGLE AND NORMAL trigger parameters of the oscilloscope and triggers, saves and retrieves the waveform
 
-The data is then saved on the controlling PC and OSC with a specific trigger ID
+The data is saved on the controlling PC and OSC in .csv or .txt file formats with a specific trigger ID
 """
 
 import pandas as pd
@@ -42,9 +42,6 @@ def SET_SINGLE_TRIGGER(OSC, channel:str, trigger_type:str, trigger_slope:str, tr
             
             waveform = OSC.get_waveform(i)
             waveform = pd.DataFrame(waveform)
-            
-        #     waveform['Time (s)', 'Amplitude (V)'] = waveform["Time (s),Amplitude (V)"].str.split(",",expand=True)
-        #     print(waveform)
     
             if waveform.empty == True:# or waveform.notna == True:
                   continue
@@ -67,9 +64,7 @@ def SET_SINGLE_TRIGGER(OSC, channel:str, trigger_type:str, trigger_slope:str, tr
                 OSC.save_parameters_trace(PC_path, i, 'Excel', "C" + str(i) + "_" + filename + "_parameters")
 
                 print(f' C{i} waveform & parameters saved on PC\n')
-        
-
-        
+                
         OSC.set_trig_mode("AUTO")
         print('Trigger Mode = AUTO\n')
 
@@ -78,7 +73,7 @@ def SET_SINGLE_TRIGGER(OSC, channel:str, trigger_type:str, trigger_slope:str, tr
         return trigger_id
 
 
-def SET_NORMAL_TRIGGER(OSC, channel:str, trigger_level:float):
+def SET_NORMAL_TRIGGER(OSC, channel:str, trigger_level:float, max_sample_pts:float):
       print("Signal Triggering....")
       OSC.set_trig_source(channel)
       OSC.set_normal_trigger()
@@ -91,10 +86,10 @@ def SET_NORMAL_TRIGGER(OSC, channel:str, trigger_level:float):
       for i in range(1,9):                                                                                                         #set range(1,5) for 4-channel and range(1,9) for 8-channel Oscilloscope respectively
                 trigger_id =  filename
                 print(f"----------------TRIGGER ID: C{i} = {filename}-------------------------")
-                
+        
                 waveform = OSC.get_waveform(i)
                 waveform = pd.DataFrame(waveform)
-                 
+                        
                 print(waveform)
 
                 if waveform.empty == True:# or waveform.notna == True:
@@ -114,8 +109,10 @@ def SET_NORMAL_TRIGGER(OSC, channel:str, trigger_level:float):
                         print(f'Saving C{i} waveform & parameters...\n')
 
                         # OSC.save_waveform_on_OSC("Excel", i,  "C" + str(i) + "_" + filename)
-                        OSC.save_waveform_on_PC(PC_path, waveform,  "C" + str(i) + "_" + filename + "_waveform")
+                        OSC.save_waveform_on_PC(PC_path, waveform,  "C" + str(i) + "_" + filename + "_waveform", max_sample_pts)
                         OSC.save_parameters_trace(PC_path, i, 'Excel', "C" + str(i) + "_" + filename + "_parameters")
 
                         print(f' C{i} waveform & parameters saved on PC!\n')
-                
+                        
+      print('-------------------------------DONE!---------------------------------------')
+      return trigger_id      

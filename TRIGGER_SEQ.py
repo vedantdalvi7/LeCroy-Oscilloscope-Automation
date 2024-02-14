@@ -3,6 +3,8 @@
 Created on Wed Nov  8 16:00:06 2023
 
 @author: DAV1SI
+TRIGGER_SEQ.py has all the configurable Channel, Timebase and Trigger parameters to trigger the OSC in SINGLE or NORMAL mode 
+and save the triggered waveforms & it's parameters on the controlling PC.
 """
 import time
 from Oscilloscope_PyVisa import Oscilloscope
@@ -15,7 +17,7 @@ ip = "192.168.240.50"
 
 #timebase or horizontal settings
 sampling_mode = "RealTime"
-tdiv = "20MS"
+tdiv = "5MS"
 sample_rate = "SetMaximumMemory"
 max_sample_points = 1e+6
 num_active_channels = "8"
@@ -55,40 +57,45 @@ if __name__ == "__main__":
     #setting individual channel parameters
     osc.SET_CHANNEL_PARAMETERS(6, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 1   
     osc.SET_CHANNEL_PARAMETERS(7, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 2
-    # osc.SET_CHANNEL_PARAMETERS(3, '5MS',2)  #channel 3
-    # osc.SET_CHANNEL_PARAMETERS(4, '5MS',1)  #channel 4
-    # osc.SET_CHANNEL_PARAMETERS(5, '5MS',6)  #channel 5
-    # osc.SET_CHANNEL_PARAMETERS(6, '5MS',2)  #channel 6
-    # osc.SET_CHANNEL_PARAMETERS(7, '5MS',8)  #channel 7
-    # osc.SET_CHANNEL_PARAMETERS(8, '5MS',9)  #channel 8
+    osc.SET_CHANNEL_PARAMETERS(3, '5MS',2)  #channel 3
+    osc.SET_CHANNEL_PARAMETERS(4, '5MS',1)  #channel 4
+    osc.SET_CHANNEL_PARAMETERS(5, '5MS',6)  #channel 5
+    osc.SET_CHANNEL_PARAMETERS(6, '5MS',2)  #channel 6
+    osc.SET_CHANNEL_PARAMETERS(7, '5MS',8)  #channel 7
+    osc.SET_CHANNEL_PARAMETERS(8, '5MS',9)  #channel 8
 
     #save setup file on OSC
-    # osc.save_setup('File',False, fr'C:\Users\LCRYDMIN\Setups\{setup_filename}') 
-    # print("Setup Saved")
+    osc.save_setup('File',False, fr'C:\Users\LCRYDMIN\Setups\{setup_filename}') 
+    print("Setup Saved")
 
-    # print(".....")
-    # time.sleep(5)
+    print(".....")
+    time.sleep(5)
 
-    # # recall prior saved custom setup from OSCs
-    # osc.recall_setup('File', fr'C:\Users\LCRYDMIN\Setups\{setup_filename}') 
-    # print("Recall Setup Successfull!")
+    # recall prior saved custom setup from OSCs
+    osc.recall_setup('File', fr'C:\Users\LCRYDMIN\Setups\{setup_filename}') 
+    print("Recall Setup Successfull!")
 
-    # #SINGLE triggering the signal
-    # start_time = time.time()
-    # id1 = SET_SINGLE_TRIGGER(osc, trig_source, trig_type, trig_slope, trig_coupling, trig_level, trig_delay, max_sample_points)
-    # print("--- %s seconds ---" % round(time.time() - start_time, 3))
-    # print(id1)
+    if trig_mode == "SINGLE":
+        #SINGLE triggering the signal
+        start_time = time.time()
+        id1 = SET_SINGLE_TRIGGER(osc, trig_source, trig_type, trig_slope, trig_coupling, trig_level, trig_delay, max_sample_points)
+        print("--- %s seconds ---" % round(time.time() - start_time, 3))
+        print(id1)
 
-    # #saving data with specific trigger ID in folder with name as same trigger ID
-    # osc.retrieve_waveform_PC(source_folder, target_folder, id1)
-    
+        #saving data with specific trigger ID in folder with name as same trigger ID
+        osc.retrieve_waveform_PC(source_folder, target_folder, id1)
+        
 
-    #NORMAL triggering the signal
-    start_time = time.time()
-    id2 = SET_NORMAL_TRIGGER(osc, trig_source, trig_level, max_sample_points)
-    print("--- %s seconds ---" % round(time.time() - start_time, 3))
-    print(id2)
+    elif trig_mode == "NORMAL":
+        #NORMAL triggering the signal
+        start_time = time.time()
+        id1 = SET_NORMAL_TRIGGER(osc, trig_source, trig_level, max_sample_points)
+        print("--- %s seconds ---" % round(time.time() - start_time, 3))
+        print(id1)
 
-    #saving data with specific trigger ID in folder with name as same trigger ID
-    osc.retrieve_waveform_PC(source_folder, target_folder, id2)
-    
+        #saving data with specific trigger ID in folder with name as same trigger ID
+        osc.retrieve_waveform_PC(source_folder, target_folder, id1)
+
+    else:
+        print("Wrong Trigger Mode Specified! Valid: SINGLE OR NORMAL")
+        

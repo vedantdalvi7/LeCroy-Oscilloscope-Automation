@@ -1,19 +1,13 @@
 import pyvisa as visa
-# import matplotlib.pyplot as plt
 import pandas as pd
-
 import xlsxwriter
-# from xlsxwriter import Workbook
 import time
 import numpy as np
 import shutil
-
 import datetime
 import os
-# import csv
-# from csv import writer
 
-# import xlsxwriter
+'''Oscilloscope_PyVisa.py has the Oscilloscope Class and various Oscilloscope Automation Commands as it's methods.'''
 
 connected = False
 
@@ -570,7 +564,7 @@ class Oscilloscope:
         '''SAVES THE OSC SETUP IN FILE OR MEMORY'''
         save_to_NAMES_VALID = ['File', 'Memory']
         if not isinstance(save_to, str):
-             raise TypeError(f'The format type must be a string, received ibject of type {type(save_to)}')
+             raise TypeError(f'The format type must be a string, received object of type {type(save_to)}')
         if save_to.lower() not in {t.lower() for t in save_to_NAMES_VALID}:
              raise ValueError(f'<save_to> must be one of {save_to_NAMES_VALID},  received {repr(save_to)}...')
         '''Save setup to File or Memory'''
@@ -584,7 +578,7 @@ class Oscilloscope:
         '''RECALLS THE OSC SETUP IN FILE OR MEMORY'''
         recall_from_NAMES_VALID = ['File', 'Memory']
         if not isinstance(recall_from, str):
-             raise TypeError(f'The format type must be a string, received ibject of type {type(recall_from)}')
+             raise TypeError(f'The format type must be a string, received object of type {type(recall_from)}')
         if recall_from.lower() not in {t.lower() for t in recall_from_NAMES_VALID}:
              raise ValueError(f'<recall_from> must be one of {recall_from_NAMES_VALID},  received {repr(recall_from)}...')
         '''Save setup to File or Memory'''
@@ -596,7 +590,7 @@ class Oscilloscope:
         '''RETRIVE A WAVEFORM WITH SPECIFIC TRIGGER-ID/CHANNEL NAME AND SAVE IT IN A SEPERATE FOLDER
          WITH THE SAME NAME ON THE CONTROLLING PC'''
         if not isinstance(id, str):
-                raise TypeError(f'The format type must be a string, received ibject of type {type(id)}')
+                raise TypeError(f'The format type must be a string, received object of type {type(id)}')
         
         # Iterate through all files in the source folder
         for filename in os.listdir(source_folder):
@@ -623,8 +617,8 @@ class Oscilloscope:
         # self.set_Vertical_Unit(channel, unit)        #only works for "ANYTHING" to "V"
         # self.set_Channel_Labels(channel, label)       #LabelText does not work
 
-ip = "192.168.240.50"
+# ip = "192.168.240.50"
 
-if __name__ == '__main__':
-    osc = Oscilloscope(f"TCPIP0::{ip}::inst0::INSTR")
-    osc.clear_sweeps()
+# if __name__ == '__main__':
+#     osc = Oscilloscope(f"TCPIP0::{ip}::inst0::INSTR")
+#     osc.clear_sweeps()
