@@ -242,7 +242,7 @@ class Oscilloscope:
         except:
             raise TypeError(f'<vdiv> must be a float number, received object of type {type(vdiv)}.')
         _validate_channel_number(channel)
-        self.write(f'C{channel}:VDIV {float(vdiv)}') # http://cdn.teledynelecroy.com/files/manuals/tds031000-2000_programming_manual.pdf#page=47
+        self.write(f'C{channel}:VDIV {vdiv}') # http://cdn.teledynelecroy.com/files/manuals/tds031000-2000_programming_manual.pdf#page=47
     
     def set_tdiv(self, tdiv: str):
         _validate_t_div_value(tdiv)
@@ -389,12 +389,11 @@ class Oscilloscope:
         """Set the channel trace to ON/OFF."""
         # See http://cdn.teledynelecroy.com/files/manuals/automation_command_ref_manual_ws.pdf#page=29
         _validate_trig_source(trig_source)
-        string = f"VBS 'app.Acquisition.{trig_source}.View = "
+        string = f"VBS 'app.Acquisition.{trig_source}.View = '"
         if status == "ON":
-            string += '"' + True + '"'
+            string += "True"
         else:
-            string +=  + 'False'
-        string += "'"
+            string +=  "False"
         self.write(string)
     
     def set_units_per_volt(self, channel: int, value: float):

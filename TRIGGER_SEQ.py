@@ -15,31 +15,34 @@ from SET_TRIGGER_SEQ import SET_SINGLE_TRIGGER, SET_NORMAL_TRIGGER
 #osc IP
 ip = "192.168.240.50"
 
+#turn ON/OFF Channel Trace as per requirement
+trace_status = {'C1':'OFF','C2':'OFF','C3':'OFF','C4':'OFF','C5':'OFF','C6':'ON','C7':'ON','C8':'OFF'}
+
 #timebase or horizontal settings
-sampling_mode = "RealTime"
-tdiv = "5MS"
-sample_rate = "SetMaximumMemory"
-max_sample_points = 1e+6
-num_active_channels = "8"
+sampling_mode = "RealTime"         #['RealTime', 'Sequence']
+tdiv = "2MS"                       #{'1NS','2NS','5NS','10NS','20NS','50NS','100NS','200NS','500NS','1US','2US','5US','10US','20US','50US','100US','200US','500US','1MS','2MS','5MS','10MS','20MS','50MS','100MS','200MS','500MS','1S','2S','5S','10S','20S','50S','100S'}
+sample_rate = "SetMaximumMemory"   #['SetMaximumMemory', 'FixedSampleRate']
+max_sample_points = 1e+6           #float value from 500 to 250e+6
+num_active_channels = "8"          #["8","4","2","Auto"]
 
 #channel vertical settings
-vdiv = 10
-ver_offset = 1.2
-units_per_volt = 10.0
-variable_gain_status = True
-channel_coupling = "DC50"
+vdiv = 10                        #float value between 10.0V and 10e-3V
+ver_offset = 0.0                 #float value between 100V and -100V
+units_per_volt = 10.0            #float value between 1.0 and -1.0
+variable_gain_status = True      #bool value True or False
+channel_coupling = "DC50"        #['DC50', 'Gnd', 'DC1M', 'AC1M']
 
 #save/recall setup
-setup_filename = "setup_vedant_12.02.24.lss"
+setup_filename = "setup_vedant_14.02.24.lss"
 
 #trigger settings
-trig_source = "C6"
-trig_type = 'EDGE'
-trig_coupling = 'DC'
-trig_slope = 'Negative'
-trig_mode = 'SINGLE'
-trig_level = 1.2
-trig_delay = -20e-3
+trig_source = "C7"               #{'C1','C2','C3','C4', 'C5', 'C6', 'C7', 'C8', 'Ext','Line','FastEdge'}
+trig_type = 'EDGE'               #{'EDGE', 'WIDTH', 'PATTERN', 'SMART', 'MEASUREMENT' , 'TV', 'MULTISTAGE'}
+trig_coupling = 'DC'             #{'AC','DC','HFREJ','LFREJ'}
+trig_slope = 'Negative'          #{'Positive', 'Negative', 'Either'}
+trig_mode = 'SINGLE'             #SINGLE, NORMAL
+trig_level = 10.0                #float value between -41.0V to 41.0V
+trig_delay = 0.0                 #float value between -20.0s to 20.0s
 
 #data retrival settings
 source_folder = r"C:\Users\DAV1SI\Desktop\test"
@@ -48,37 +51,40 @@ id = r"C2_12_FEB_2024"
 
 if __name__ == "__main__":
 
-    #connection to Oscilloscope
+    #connect to Oscilloscope
     osc = Oscilloscope(f"TCPIP0::{ip}::inst0::INSTR")
 
-    #setting TImebase settings for ALL channels
+    #set channel traces ON/OFF
+    for source, status in trace_status.items():
+        osc.set_trace(source,status)
+
+    #setting Timebase settings for ALL channels
     osc.timebase_settings(sampling_mode,tdiv,sample_rate,max_sample_points,num_active_channels) #issues with 10.0MS, 10MS, 2.500000000 GS/s
     
     #setting individual channel parameters
-    osc.SET_CHANNEL_PARAMETERS(6, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 1   
-    osc.SET_CHANNEL_PARAMETERS(7, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 2
-    osc.SET_CHANNEL_PARAMETERS(3, '5MS',2)  #channel 3
-    osc.SET_CHANNEL_PARAMETERS(4, '5MS',1)  #channel 4
-    osc.SET_CHANNEL_PARAMETERS(5, '5MS',6)  #channel 5
-    osc.SET_CHANNEL_PARAMETERS(6, '5MS',2)  #channel 6
-    osc.SET_CHANNEL_PARAMETERS(7, '5MS',8)  #channel 7
-    osc.SET_CHANNEL_PARAMETERS(8, '5MS',9)  #channel 8
+    osc.SET_CHANNEL_PARAMETERS(1, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 1   
+    osc.SET_CHANNEL_PARAMETERS(2, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 2
+    osc.SET_CHANNEL_PARAMETERS(3, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 3   
+    osc.SET_CHANNEL_PARAMETERS(4, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 4
+    osc.SET_CHANNEL_PARAMETERS(5, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 5   
+    osc.SET_CHANNEL_PARAMETERS(6, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 6
+    osc.SET_CHANNEL_PARAMETERS(7, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 7   
+    osc.SET_CHANNEL_PARAMETERS(8, vdiv, ver_offset, units_per_volt, variable_gain_status, channel_coupling)  #channel 8
 
     #save setup file on OSC
-    osc.save_setup('File',False, fr'C:\Users\LCRYDMIN\Setups\{setup_filename}') 
-    print("Setup Saved")
+    # osc.save_setup('File',False, fr'C:\Users\LCRYDMIN\Setups\{setup_filename}') 
+    # print("Setup Saved")
+    # print(".....")
+    # time.sleep(5)
 
-    print(".....")
-    time.sleep(5)
-
-    # recall prior saved custom setup from OSCs
-    osc.recall_setup('File', fr'C:\Users\LCRYDMIN\Setups\{setup_filename}') 
-    print("Recall Setup Successfull!")
+    # # recall prior saved custom setup from OSCs
+    # osc.recall_setup('File', fr'C:\Users\LCRYDMIN\Setups\{setup_filename}') 
+    # print("Recall Setup Successfull!")
 
     if trig_mode == "SINGLE":
         #SINGLE triggering the signal
         start_time = time.time()
-        id1 = SET_SINGLE_TRIGGER(osc, trig_source, trig_type, trig_slope, trig_coupling, trig_level, trig_delay, max_sample_points)
+        id1 = SET_SINGLE_TRIGGER(osc, trace_status, trig_source, trig_slope, trig_coupling, trig_level, trig_delay, max_sample_points)
         print("--- %s seconds ---" % round(time.time() - start_time, 3))
         print(id1)
 
@@ -89,7 +95,7 @@ if __name__ == "__main__":
     elif trig_mode == "NORMAL":
         #NORMAL triggering the signal
         start_time = time.time()
-        id1 = SET_NORMAL_TRIGGER(osc, trig_source, trig_level, max_sample_points)
+        id1 = SET_NORMAL_TRIGGER(osc, trace_status, trig_source, trig_slope, trig_coupling, trig_level, trig_delay, max_sample_points)
         print("--- %s seconds ---" % round(time.time() - start_time, 3))
         print(id1)
 
@@ -97,5 +103,5 @@ if __name__ == "__main__":
         osc.retrieve_waveform_PC(source_folder, target_folder, id1)
 
     else:
-        print("Wrong Trigger Mode Specified! Valid: SINGLE OR NORMAL")
+        print("Wrong Trigger Mode Specified! Valid: SINGLE or NORMAL")
         
