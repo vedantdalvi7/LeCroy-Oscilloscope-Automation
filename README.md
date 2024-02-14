@@ -13,13 +13,17 @@ plot_measured_Waveform.py helps in validating the saved waveforms.
 ------------------------------------------------------------------------------------------------------------------------------------------
 **OSCILLOSCOPE SETUP INSTRUCTIONS:**
 
-i. Make sure Firewall is Disabled on BOTH the OSC and PC
+i. copy the latest folder of scripts from sharef drive to controlling PC. Create a new conda environment and install all the dependencies with "pip install -r pip_requirements.txt" command. 
 
-ii. REMEMBER to set the correct IP of OSC and select the LXI(VXI1) protocol from "Utilities-> Utilities Setup-> Remote-> Control From" in DSO application on OSC. Make sure OSC and PC have the same subnet
+ii. Now, switch ON the OSC and prepare your setup.
 
-iii. Check if OSC can be pinged via Command Prompt with: ping "ip_address" 
+iiii. Make sure Firewall is Disabled on BOTH the OSC and PC
 
-iv. If you cannot connect ping to OSC,
+iv. REMEMBER to set the correct IP of OSC and select the LXI(VXI1) protocol from "Utilities-> Utilities Setup-> Remote-> Control From" in DSO application on OSC. Make sure OSC and PC have the same subnet
+
+v. Check if OSC can be pinged via Command Prompt with: ping "ip_address" 
+
+vi. If you cannot connect ping to OSC,
 
 a. check IP address and IP subnet of OSC & PC
 b. Turn Firewall OFF on OSC

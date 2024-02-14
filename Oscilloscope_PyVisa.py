@@ -212,7 +212,7 @@ class Oscilloscope:
             if timeout >= 0 and time.time() - start > timeout:
                 raise RuntimeError(f'Timed out waiting for oscilloscope to trigger after {timeout} seconds.')
             
-    def set_normal_trigger(self,timeout=-1):
+    def set_normal_trigger(self,timeout=5):
         """Sets the trigger in 'NORMAL' and triggers the signal multiple times
         on the same condition until Stopped manually.
         - timeout: float, number of seconds to wait until raising a 
@@ -504,6 +504,8 @@ class Oscilloscope:
         # print("Saving measured parameters...")
         #dir = self.query("vbs? 'app.SaveRecall.Waveform.WaveformDir '")
         # create a new XLSX workbook
+        if not os.path.exists(path):
+                os.makedirs(path)
         wb = xlsxwriter.Workbook(fr"{path}\{id}.xlsx")
         worksheet = wb.add_worksheet()
         # insert value in the cells
